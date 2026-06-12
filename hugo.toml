@@ -1,0 +1,4 @@
+baseURL = 'https://shibonW.github.io/'
+languageCode = 'zh-cn'
+title = "shibonW's blog"
+theme = 'PaperMod'

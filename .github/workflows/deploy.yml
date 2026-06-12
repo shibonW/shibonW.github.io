@@ -3,28 +3,35 @@ name: Deploy Hugo Site to GitHub Pages
 on:
   push:
     branches:
-      - main  # 当main分支有推送时触发
+      - main  # 如果你的默认分支是 master，请改成 master
+
+# 关键：授予工作流写入仓库的权限（用于推送到 gh-pages 分支）
+permissions:
+  contents: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
         with:
-          submodules: true
-          fetch-depth: 0
+          submodules: true   # 拉取主题子模块
+          fetch-depth: 0     # 获取完整历史（用于最后更新时间等）
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: 'latest'  # 这里可以指定具体版本号，如'0.119.0'
-          extended: true          # 是否使用extended版本
+          hugo-version: '0.119.0'   # 请替换为你本地使用的具体版本，避免 future 不兼容
+          extended: true            # 大多数主题需要 extended 版本
 
-      - name: Build
+      - name: Build site
         run: hugo --minify
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public  # Hugo生成的静态文件目录
+          publish_dir: ./public     # Hugo 默认输出目录
+          # 如果你希望推送到其他分支（默认是 gh-pages），可以添加：
+          # publish_branch: gh-pages

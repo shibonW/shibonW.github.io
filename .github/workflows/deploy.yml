@@ -24,6 +24,9 @@ jobs:
         with:
           hugo-version: '0.119.0'   # 请替换为你本地使用的具体版本，避免 future 不兼容
           extended: true            # 大多数主题需要 extended 版本
+      
+      - name: List files for debugging   # 新增这一步
+        run: ls -la
 
       - name: Build site
         run: hugo --minify
